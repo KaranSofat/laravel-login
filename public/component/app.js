@@ -1,43 +1,29 @@
- 
 // create angular app
     var demoApp = angular.module('demoApp', []);
 
     // create angular controller
     demoApp.controller('mainController', function($scope,Auth) {
-
-
         //initilize  user
         $scope.user = {};
         // function to submit the form after all validation has occurred            
         $scope.submitForm = function(isValid) {
          if(!isValid){
-
            $scope.errormessage  = "Input Error, please provide right inputs";
-         
           }
          else{
-           
+          //if valid
             var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
-            if(iOS == false){
-                iOS  = '1'; 
-            }else{
-                iOS  = '0';
-            }
             $scope.user.isIos = iOS; 
-
+             
              Auth.Register(JSON.stringify($scope.user)).then(function(response){
                console.log(response);
-             
              });
-
          }
-
-        
             
         };
 
     });
-   
+   //directive for password validations
    demoApp.directive('passwordValidate', function() {
     return {
         require: 'ngModel',
@@ -63,34 +49,13 @@
 });
 
 
-
-
  //factory for authentication and login signup 
 demoApp.factory('Auth',function($http,$q){
 
   return{
-    login:function(item){
-
-           var Url = 'login';
-           var defer = $q.defer();
-
-           $http.post(Url,item).
-              success(function (data, status, headers, config) {
-                  defer.resolve(data);
-              }).
-              error(function (data, status, headers, config) {
-                  defer.reject();
-              });
-
-            return defer.promise;
-    },
-
-    logout:function(){
-       storageService.remove('loggedIn');
-    },
 
     Register:function(item){
-           var Url = '/{test}/public/app/register';
+           var Url = 'app/register';
            var defer = $q.defer();
 
            $http.post(Url,item).
@@ -103,14 +68,7 @@ demoApp.factory('Auth',function($http,$q){
 
             return defer.promise;
 
-    },
-
-    auth_token:function(){
-      var user_data =  storageService.get('user_data');
-      var data = JSON.parse(user_data);
-      return  data[0].auth_token;
     }
-
   }
 
 })
